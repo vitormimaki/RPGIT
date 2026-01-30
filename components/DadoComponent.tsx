@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, Modal, Pressable } from "react-native";
 import { IconButton } from "react-native-paper";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useHistory } from "@/contexts/HistoryContext";
 
 interface DadoComponentProps {
@@ -54,7 +53,7 @@ export default function DadoComponent({
         return Math.floor(Math.random() * lados) + 1;
     }
 
-    function rolarDado(lados: number): number {
+    function rolarDado(lados: number) {
         const resultados: number[] = [];
         let soma = 0;
 
@@ -69,49 +68,17 @@ export default function DadoComponent({
         setValores(resultados);
         setTotal(totalFinal);
 
-        adicionarRolagem({
-            id: Date.now(),
-            dado: {
+        adicionarRolagem(
+            {
                 qtde,
                 lados,
                 mod,
             },
-            res: totalFinal,
-            valores: resultados,
-            date: new Date().toISOString(),
-        });
+            resultados,
+            totalFinal
+        );
 
         return totalFinal;
-    }
-
-    async function salvarRolagem(total: number, valores: number[]) {
-        try {
-            const novaRolagem = {
-                id: Date.now(),
-                dado: {
-                    qtde,
-                    lados,
-                    mod,
-                },
-                res: total,
-                valores,
-                date: new Date().toISOString(),
-            };
-
-            const historicoAtual = await AsyncStorage.getItem("@dice_history");
-            const historico: any[] = historicoAtual
-                ? JSON.parse(historicoAtual)
-                : [];
-
-            historico.unshift(novaRolagem);
-
-            await AsyncStorage.setItem(
-                "@dice_history",
-                JSON.stringify(historico),
-            );
-        } catch (error) {
-            console.error("Erro ao salvar rolagem:", error);
-        }
     }
 
     function fecharModal() {

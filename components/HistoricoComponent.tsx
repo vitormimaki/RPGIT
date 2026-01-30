@@ -11,6 +11,7 @@ interface DadoComponentProps {
 interface HistoricoComponentProps {
     dado: DadoComponentProps;
     res: number;
+    valores?: number[];
     date?: Date;
     onDelete?: () => void;
 }
@@ -22,6 +23,7 @@ export default function HistoricoComponent({
         lados: 20,
     },
     res = 0,
+    valores = [],
     date = new Date(),
     onDelete,
 }: HistoricoComponentProps) {
@@ -72,6 +74,11 @@ export default function HistoricoComponent({
             fontSize: 12,
             marginTop: 2,
         },
+        valoresText: {
+            color: "#d1d5db",
+            fontSize: 12,
+            marginTop: 4,
+        },
     };
 
     return (
@@ -90,6 +97,11 @@ export default function HistoricoComponent({
                     <Text style={styles.dateText}>
                         {dataFormatada} • {horaFormatada}
                     </Text>
+                    {valores && valores.length > 0 && (
+                        <Text style={styles.valoresText}>
+                            {valores.join(", ")}
+                        </Text>
+                    )}
                 </View>
             </View>
         </Pressable>

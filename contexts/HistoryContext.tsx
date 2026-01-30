@@ -15,8 +15,12 @@ export interface Rolagem {
 
 interface HistoryContextProps {
     rolagens: Rolagem[];
-    adicionarRolagem: (rolagem: Rolagem) => Promise<void>;
-    removerRolagem: (id: number) => Promise<void>;
+    adicionarRolagem: (
+        dado: Rolagem["dado"],
+        valores: number[],
+        res: number,
+    ) => void;
+    removerRolagem: (id: number) => void;
     limparHistorico: () => Promise<void>;
 }
 
@@ -43,11 +47,24 @@ export function HistoryProvider({ children }: { children: React.ReactNode }) {
         }
     }
 
-    async function adicionarRolagem(rolagem: Rolagem) {
-        const novaLista = [rolagem, ...rolagens];
-        setRolagens(novaLista);
+    function adicionarRolagem(
+        dado: Rolagem["dado"],
+        valores: number[],
+        res: number,
+    ) {
+        const novaRolagem: Rolagem = {
+            id: Date.now(),
+            dado,
+            valores,
+            res,
+            date: new Date().toISOString(),
+        };
 
-        await AsyncStorage.setItem("@dice_history", JSON.stringify(novaLista));
+        setRolagens((prev) => {
+            const atualizado = [novaRolagem, ...prev];
+            AsyncStorage.setItem("@dice_history", JSON.stringify(atualizado));
+            return atualizado;
+        });
     }
 
     function removerRolagem(id: number) {
@@ -57,7 +74,6 @@ export function HistoryProvider({ children }: { children: React.ReactNode }) {
             return novaLista;
         });
     }
-
 
     async function limparHistorico() {
         setRolagens([]);

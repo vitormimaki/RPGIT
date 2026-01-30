@@ -40,15 +40,14 @@ export default function History() {
             <FlatList
                 data={rolagens}
                 keyExtractor={(item) => item.id.toString()}
-                contentContainerStyle={{ padding: 12 }}
                 renderItem={({ item }) => (
-                    <SwipeableCard onDelete={() => removerRolagem(item.id)}>
-                        <HistoricoComponent
-                            dado={item.dado}
-                            res={item.res}
-                            date={new Date(item.date)}
-                        />
-                    </SwipeableCard>
+                    <HistoricoComponent
+                        dado={item.dado}
+                        res={item.res}
+                        valores={item.valores}
+                        date={new Date(item.date)}
+                        onDelete={() => confirmarRemocao(item.id)}
+                    />
                 )}
             />
         </View>
