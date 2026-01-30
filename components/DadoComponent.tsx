@@ -1,20 +1,25 @@
 import React, { useState } from "react";
-import { View, Text, Modal, Pressable } from "react-native";
+import { View, Text, Modal, Pressable, Alert } from "react-native";
 import { IconButton } from "react-native-paper";
 import { useHistory } from "@/contexts/HistoryContext";
+import * as Haptics from "expo-haptics";
 
 interface DadoComponentProps {
+    tam?: number;
     mod?: number;
     qtde?: number;
     lados: number;
     padrao?: boolean;
+    onDelete?: () => void;
 }
 
 export default function DadoComponent({
+    tam = 48,
     mod = 0,
     qtde = 1,
     lados,
     padrao = false,
+    onDelete,
 }: DadoComponentProps) {
     const [modalVisible, setModalVisible] = useState(false);
     const [modalTransparent, setModalTransparent] = useState(true);
@@ -75,7 +80,7 @@ export default function DadoComponent({
                 mod,
             },
             resultados,
-            totalFinal
+            totalFinal,
         );
 
         return totalFinal;
@@ -87,10 +92,22 @@ export default function DadoComponent({
         setValores([]);
     }
 
-    function excluir(padrao: boolean): null {
-        if (!padrao) {
-            setLongPressed(true);
-        }
+    function excluir() {
+        if (padrao || !onDelete) return;
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        Alert.alert("Excluir dado", `Deseja remover o dado d${lados}?`, [
+            {
+                text: "Cancelar",
+                style: "cancel",
+            },
+            {
+                text: "Excluir",
+                style: "destructive",
+                onPress: () => {
+                    onDelete();
+                },
+            },
+        ]);
     }
 
     const styles = {
@@ -149,13 +166,13 @@ export default function DadoComponent({
             <IconButton
                 icon={defaultIcon}
                 iconColor="#000"
-                size={48}
+                size={tam}
                 onPress={() => {
                     rolarDado(lados);
                     setModalVisible(true);
                     setModalTransparent(true);
                 }}
-                onLongPress={() => excluir(padrao)}
+                onLongPress={excluir}
             />
             <Text>d{lados}</Text>
         </View>

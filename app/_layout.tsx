@@ -1,9 +1,11 @@
 import { Tabs } from "expo-router";
-import { Icon } from "react-native-paper";
+import { Icon, IconButton } from "react-native-paper";
+import { useRouter } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { HistoryProvider } from "@/contexts/HistoryContext";
 
 export default function RootLayout() {
+    const router = useRouter();
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
             <HistoryProvider>
@@ -32,7 +34,7 @@ export default function RootLayout() {
                     />
 
                     <Tabs.Screen
-                        name="dice"
+                        name="dice/index"
                         options={{
                             title: "Dados",
                             tabBarLabel: "Dados",
@@ -42,6 +44,12 @@ export default function RootLayout() {
                                     size={28}
                                     source="dice-multiple"
                                     color={focused ? "black" : "gray"}
+                                />
+                            ),
+                            headerRight: () => (
+                                <IconButton
+                                    icon="plus"
+                                    onPress={() => router.push("/dice/add")}
                                 />
                             ),
                         }}
@@ -92,6 +100,14 @@ export default function RootLayout() {
                                     color={focused ? "black" : "gray"}
                                 />
                             ),
+                        }}
+                    />
+
+                    <Tabs.Screen
+                        name="dice/add"
+                        options={{
+                            href: null, // Esconde o Botão da tab bar
+                            tabBarStyle: { display: "none" }, //Esconde a Tab Bar
                         }}
                     />
                 </Tabs>
