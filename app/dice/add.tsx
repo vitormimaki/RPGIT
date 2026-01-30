@@ -11,7 +11,7 @@ export default function AddDice() {
         const value = parseInt(lados);
 
         if (!value) return;
-
+        setLados("");
         addCustomDice(value);
         router.back();
     }

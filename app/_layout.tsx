@@ -49,7 +49,7 @@ export default function RootLayout() {
                             headerRight: () => (
                                 <IconButton
                                     icon="plus"
-                                    onPress={() => router.push("/dice/add")}
+                                    onPress={() => router.navigate("/dice/add")}
                                 />
                             ),
                         }}
